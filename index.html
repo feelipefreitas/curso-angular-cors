@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>CORS</title>
+    </head>
+    <body>
+        <button id="btn">Alterar</button>
+
+        <script>
+            const btn = document.getElementById('btn');
+
+            btn.addEventListener('click', () => {
+                const xhr = new XMLHttpRequest();
+
+                xhr.open('PUT', 'http://localhost:5000/users/0');
+                xhr.setRequestHeader('Content-Type', 'application/json');
+
+                xhr.onload = () => {
+                    console.log(xhr.response);
+                };
+
+                const newUser = {
+                    id: 0,
+                    name: 'Felipe Atualizado',
+                    age: 30
+                };
+
+                xhr.send(JSON.stringify(newUser));
+            });
+        </script>
+    </body>
+</html>
