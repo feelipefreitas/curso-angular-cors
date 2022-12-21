@@ -50,7 +50,10 @@ server.put('/users/:id', (req, res) => {
     res.setHeader('Access-Control-Allow-Origin', req.get('Origin'));
 
     const validOrigin = validOrigins.find(validOrigin => validOrigin.origin === req.get('Origin'));
-    res.setHeader('Access-Control-Allow-Credentials', validOrigin.credentials);
+
+    if(validOrigin) {
+        res.setHeader('Access-Control-Allow-Credentials', validOrigin.credentials);
+    }
 
     const id = +req.params.id;
     const newUser = req.body;
