@@ -1,8 +1,26 @@
 const express = require('express');
+const cors = require('cors');
 
 const server = express();
 
 server.use(express.json());
+
+/**
+ * Configuração Personalizada
+ */
+const corsConfig = {
+    origin: ['http://127.0.0.1:8080', 'http://127.0.0.1:5050'],
+    methods: 'PUT',
+    allowedHeaders: 'content-type,x-auth-custom',
+    credentials: true
+};
+
+server.use(cors(corsConfig));
+
+/**
+ * Configuração Padrão
+ */
+// server.use(cors());
 
 const users = [
     {
