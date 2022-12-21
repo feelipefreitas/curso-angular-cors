@@ -5,20 +5,31 @@ const server = express();
 server.use(express.json());
 
 const validOrigins = [
-    'http://127.0.0.1:8080',
-    'http://127.0.0.1:5050'
+    {
+        origin: 'http://127.0.0.1:8080',
+        methods: 'PUT',
+        headers: 'content-type,x-auth-custom',
+        credentials: true,
+    },
+    {
+        origin: 'http://127.0.0.1:5050',
+        methods: 'PUT,POST,DELETE',
+        headers: 'content-type,x-auth-custom',
+        credentials: false,
+    },
 ];
 
 server.use((req, res, next) => {
     if(req.method === 'OPTIONS') {
-        console.log('OPTIONS');
+        console.log('OPTIONS - Pre-Flight');
 
-        const validOrigin = validOrigins.find(origin => origin === req.get('Origin'));
+        const validOrigin = validOrigins.find(validOrigin => validOrigin.origin === req.get('Origin'));
 
         if(validOrigin) {
-            res.setHeader('Access-Control-Allow-Origin', validOrigin);
-            res.setHeader('Access-Control-Allow-Methods', 'PUT');
-            res.setHeader('Access-Control-Allow-Headers', 'content-type,x-auth-custom');
+            res.setHeader('Access-Control-Allow-Origin', validOrigin.origin);
+            res.setHeader('Access-Control-Allow-Methods', validOrigin.methods);
+            res.setHeader('Access-Control-Allow-Headers', validOrigin.headers);
+            res.setHeader('Access-Control-Allow-Credentials', validOrigin.credentials);
         }
 
         return res.status(204).send();
@@ -37,6 +48,9 @@ const users = [
 
 server.put('/users/:id', (req, res) => {
     res.setHeader('Access-Control-Allow-Origin', req.get('Origin'));
+
+    const validOrigin = validOrigins.find(validOrigin => validOrigin.origin === req.get('Origin'));
+    res.setHeader('Access-Control-Allow-Credentials', validOrigin.credentials);
 
     const id = +req.params.id;
     const newUser = req.body;

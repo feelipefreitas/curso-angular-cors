@@ -16,6 +16,8 @@
                 xhr.setRequestHeader('Content-Type', 'application/json');
                 xhr.setRequestHeader('X-Auth-Custom', 'TESTE');
 
+                xhr.withCredentials = true;
+
                 xhr.onload = () => {
                     console.log(xhr.response);
                 };
